@@ -1,0 +1,19 @@
+<meta charset="utf-8">
+<title>report demo</title>
+<script src="https://unpkg.com/vue"></script>
+<script src="dist/salesProfitReport.umd.js"></script>
+
+<link rel="stylesheet" href="dist/report.css">
+
+
+<div id="app">
+  <sales-profit-report text="Hi"></sales-profit-report>
+</div>
+
+<script>
+new Vue({
+  components: {
+        'sales-profit-report': salesProfitReport
+  }
+}).$mount('#app')
+</script>
