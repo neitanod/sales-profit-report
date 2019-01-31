@@ -1,12 +1,15 @@
 <template>
     <div class="sales-profit-report report-container">
-        <table v-if="errors.length">
-            <tr>
-                <td v-for="(error, i) in errors" class="alert alert-error" v-bind:key="i">
-                    {{ error }}
-                </td>
-            </tr>
-        </table>
+        <div v-if="errors.length" class="alert alert-error">
+            <div>Errors were found:</div>
+            <table>
+                <tr>
+                    <td v-for="(error, i) in errors" v-bind:key="i">
+                        {{ error }}
+                    </td>
+                </tr>
+            </table>
+        </div>
 
         <div>
             Search everywhere: <input type="text" @change="retrieveData" v-model="search_string" class="form-control">
@@ -56,12 +59,17 @@
 </template>
 <script>
 export default {
-    props: [],
+    props: {endpoint: {
+        type: String,
+        default: 'api/something'
+    }},
     data: function() {
         return {
             records: [
             ],
             order_by: '',
+            requested_page: 1,
+            requested_perpage: 10,
             page: 1,
             pages: 1,
             perpage: 10,
@@ -76,17 +84,39 @@ export default {
     },
     methods: {
         retrieveData() {
-            if(typeof Axios == 'undefined') {
-                this.errors = ['Axios library is not loaded.  Cannot retrieve data.'];
-            } else {
+            if(typeof axios == 'function') {
                 // Axios is present and we can use it
+                let self = this;  // we save a reference to this in self to use it inside the callback.
+
+                // here we call Axios.get() against the API endpoint that would give us the JSON list of records
+                let params = {
+                    page: self.requested_page,
+                    perpage: self.requested_perpage,
+                    search_string: self.search_string,
+                    search_in_id: self.search_in_id,
+                    search_in_name: self.search_in_name,
+                    search_in_phone: self.search_in_phone,
+                    selected_ids: self.selected_ids,
+                    all_selected: self.all_selected
+                }
+                axios.get(self.endpoint, params)
+                .then(function(response) {
+                    let data = {};
+                    console.log(response);
+                    top.lastResponse = response;
+                    if(typeof response.data == 'string') {
+                        data = JSON.parse(response.data);
+                    } else {
+                        data = response.data;
+                    }
+                    console.log(data);
+                    self.records = data.records;
+                }).catch(function(error) {
+                    self.errors = [error.message];
+                });
+            } else {
+                this.errors = ['Axios library is not loaded.  Cannot retrieve data.'];
             }
-            // here we call Axios.get() against the API endpoint that would give us the JSON list of records
-            // but for now we just assign a demo array:
-            this.records = [
-                {id: 1, name: "Sebastian", phone: "15-6767-3010" },
-                {id: 2, name: "Kalvin",    phone: "555-12345" }
-            ];
             this.$forceUpdate();
         },
         reorder() {

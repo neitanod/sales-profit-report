@@ -1,0 +1,10 @@
+{
+    "page": 5,
+    "pages": 15,
+    "perpage": 10,
+    "records": [
+        {"id": 1, "name": "Sebastian", "phone": "15-6767-3010" },
+        {"id": 2, "name": "Kalvin",    "phone": "555-12345" },
+        {"id": 3, "name": "Rob",       "phone": "555-99999" }
+    ]
+}
