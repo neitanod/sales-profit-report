@@ -27,7 +27,7 @@
                     <td><input type="text" @change="retrieveData" class="form-control" v-model="search_in_name"></td>
                     <td><input type="text" @change="retrieveData" class="form-control" v-model="search_in_phone"></td>
                 </tr>
-                <tr v-for="record in records">
+                <tr v-for="record in records" v-bind:key="record.id">
                     <td><input type="checkbox"></td>
                     <td>{{ record.id }}</td>
                     <td>{{ record.name }}</td>
