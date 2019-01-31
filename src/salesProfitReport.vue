@@ -2,7 +2,7 @@
     <div class="sales-profit-report report-container">
         <table v-if="errors.length">
             <tr>
-                <td v-for="error in errors" class="alert alert-error">
+                <td v-for="(error, i) in errors" class="alert alert-error" v-bind:key="i">
                     {{ error }}
                 </td>
             </tr>
