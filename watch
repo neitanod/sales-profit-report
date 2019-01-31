@@ -1,6 +1,7 @@
+./build
 inotifywait -m -e CLOSE_WRITE src | while read file; do
     notify-send "Compiling..."
     echo $file
-    vue build -t lib src/salesProfitReport.vue
+    ./build
     notify-send "Component recompiled"
 done
