@@ -77,6 +77,9 @@ export default {
             this.links_before = Math.min(corner_before, corner_before+(middle_after-corner_after));
         },
         change(page) {
+            // we are now using v-model=
+            // (two way bind explained here: http://vmodel.ip1.cc)
+            // instead of :page=
             this.$emit('input', page*1); // Emit as number
         }
     },
