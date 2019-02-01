@@ -29,7 +29,7 @@
         </table>
         <div>
             <div class="pull-left showing">Showing {{ (page-1)*perpage+1 }} to {{ (page-1)*perpage+records.length }}  of {{ count }} entries</div>
-            <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" v-model="page" :pages="pages()" links="7"></paginator></div>
+            <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" v-model="page" :pages="pages()" links="5"></paginator></div>
             <div class="pull-right perpage">Display
                 <select class="form-control" v-model="perpage" @change="retrieveData">
                     <option value="10">10</option>

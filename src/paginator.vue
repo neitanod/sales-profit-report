@@ -1,12 +1,20 @@
 <template>
     <ul class="paginator">
-        <li class="paginate-button first"><a v-if="first" @click.prevent="change(1)" href="#1">|&lt; </a></li>
-        <li class="paginate-button prev" ><a v-if="prev"  @click.prevent="change(page-1)" :href="'#'+(page-1)">&lt; </a></li>
+        <li v-if="first" class="paginate-button first"><a @click.prevent="change(1)" href="#1">
+                <i class="fa fa-angle-double-left"></i>
+            </a></li>
+        <li v-if="prev" class="paginate-button prev" ><a @click.prevent="change(page-1)" :href="'#'+(page-1)">
+                <i class="fa fa-angle-left"></i>
+            </a></li>
         <li class="paginate-button" v-for="button in linksBefore()" :key="button"> <a @click.prevent="change(button)" :href="'#'+button">{{ button }} </a></li>
         <li class="paginate-button current"><span class="paginator-current-page">{{ page }} </span></li>
         <li class="paginate-button" v-for="button in linksAfter()" :key="button"> <a @click.prevent="change(button)" :href="'#'+button">{{ button }} </a></li>
-        <li class="paginate-button next" ><a v-if="next"  @click.prevent="change(page*1+1)" :href="'#'+(page*1+1)">&gt; </a></li>
-        <li class="paginate-button last" ><a v-if="last"  @click.prevent="change(pages)" :href="'#'+pages">&gt;| </a></li>
+        <li v-if="next" class="paginate-button next" ><a @click.prevent="change(page*1+1)" :href="'#'+(page*1+1)">
+                <i class="fa fa-angle-right"></i>
+            </a></li>
+        <li v-if="last" class="paginate-button last" ><a @click.prevent="change(pages)" :href="'#'+pages">
+                <i class="fa fa-angle-double-right"></i>
+            </a></li>
     </ul>
 </template>
 <script>
@@ -111,10 +119,67 @@ export default {
 }
 </script>
 <style>
+@import url(//maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css);
 .paginator ul li {
     display: inline;
 }
 .paginator .paginator-current-page {
     color: #555555;
+}
+.paginator .paginate-button {
+    color: #898b96;
+    border-radius: 50%;
+    cursor: pointer;
+    justify-content: center;
+    height: 2.25rem;
+    min-width: 2.25rem;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.5rem;
+    text-align: center;
+    position: relative;
+    font-size: 13px;
+    line-height: 1rem;
+    font-weight: 400;
+    margin: 5px;
+}
+.paginator .paginate-button a,
+.paginator .paginate-button .paginator-current-page {
+    min-width: 19px;
+    display: inline-block;
+    padding: 5px;
+}
+.paginator .paginate-button a {
+    color: #898b96;
+}
+.paginator .paginate-button .paginator-current-page {
+    color: #ffffff;
+}
+.paginator .paginate-button.current {
+    background-color: #716aca;
+}
+.paginator .paginate-button.first,
+.paginator .paginate-button.last,
+.paginator .paginate-button.prev,
+.paginator .paginate-button.next {
+    background-color: #ebe9f2;
+}
+.paginator .paginate-button.first a,
+.paginator .paginate-button.last a,
+.paginator .paginate-button.prev a,
+.paginator .paginate-button.next a {
+    color: #575962;
+    padding: 0;
+}
+.paginator .paginate-button:hover {
+    background-color: #716aca;
+}
+.paginator .paginate-button:hover a {
+    color: #ffffff;
+    text-decoration: none;
+}
+.paginator .paginate-button.disabled {
+    opacity: 0.6;
 }
 </style>
