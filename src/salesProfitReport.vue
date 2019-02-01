@@ -74,6 +74,7 @@ export default {
                     perpage: self.perpage,
                     sort: self.order_by,
                 }
+                // eslint-disable-next-line
                 axios.get(self.endpoint, {params: parameters})
                 .then(function(response) {
                     if(self.last_request != this_request) {
@@ -81,7 +82,7 @@ export default {
                         // we made (maybe because of network issues)
                         // Discard it.
                         return;
-                    };
+                    }
                     let data = {};
                     console.log(response);
                     top.lastResponse = response;
