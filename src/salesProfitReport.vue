@@ -132,6 +132,7 @@ export default {
 }
 </script>
 <style>
+    @import url(//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700%7CRoboto:300,400,500,600,700);
     .sales-profit-report {
         font-family: Poppins;
         font-weight: 300;
