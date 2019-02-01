@@ -29,7 +29,7 @@
         </table>
         <div>
             <div class="pull-left showing">Showing 1 to 10 of 50 entries</div>
-            <div class="pull-right paginator"><paginator :first="true" :last="true" :page="page" :pages="pages()" links="7"></paginator></div>
+            <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" :page="page" :pages="pages()" links="7"></paginator></div>
             <div class="pull-right perpage">Display
                 <select v-model="perpage">
                     <option value="10">10</option>
