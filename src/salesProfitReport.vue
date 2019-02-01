@@ -14,9 +14,9 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th scope="col" class="sorting" :class="orderClass('id')" @click="reorder('id')">#</th>
-                    <th scope="col" class="sorting" :class="orderClass('name')" @click="reorder('name')">Name</th>
-                    <th scope="col" class="sorting" :class="orderClass('phone')" @click="reorder('phone')">Phone</th>
+                    <th scope="col" :class="orderClass('id')" @click="reorder('id')">#</th>
+                    <th scope="col" :class="orderClass('name')" @click="reorder('name')">Name</th>
+                    <th scope="col" :class="orderClass('phone')" @click="reorder('phone')">Phone</th>
                 </tr>
             </thead>
             <tbody>
@@ -129,6 +129,7 @@ export default {
              and it does not remove classes added by regular class= attribute
             */
             let css_classes = {};
+            css_classes['sorting'] = true;
             css_classes['sorting_asc'] = (order == this.order_by);
             css_classes['sorting_desc'] = (order+"_desc" == this.order_by);
             return css_classes;
