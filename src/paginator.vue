@@ -1,12 +1,12 @@
 <template>
     <ul class="paginator">
-        <li class="paginate-button"><a v-if="first" href="#1">|&lt; </a></li>
-        <li class="paginate-button"><a v-if="prev" :href="'#'+(page-1)">&lt; </a></li>
+        <li class="paginate-button first"><a v-if="first" href="#1">|&lt; </a></li>
+        <li class="paginate-button prev"><a v-if="prev" :href="'#'+(page-1)">&lt; </a></li>
         <li class="paginate-button" v-for="(button, i) in linksBefore()"> <a :href="'#'+button" :key="i">{{ button }} </a></li>
-        <li class="paginate-button"><span class="paginator-current-page">{{ page }} </span></li>
+        <li class="paginate-button current"><span class="paginator-current-page">{{ page }} </span></li>
         <li class="paginate-button" v-for="(button, i) in linksAfter()" > <a :href="'#'+button" :key="i">{{ button }} </a></li>
-        <li class="paginate-button"><a v-if="next" :href="'#'+(page*1+1)">&gt; </a></li>
-        <li class="paginate-button"><a v-if="last" :href="'#'+pages">&gt;| </a></li>
+        <li class="paginate-button next"><a v-if="next" :href="'#'+(page*1+1)">&gt; </a></li>
+        <li class="paginate-button last"><a v-if="last" :href="'#'+pages">&gt;| </a></li>
     </ul>
 </template>
 <script>
