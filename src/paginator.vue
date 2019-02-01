@@ -72,8 +72,8 @@ export default {
             let corner_after  = Math.min(this.pages-this.page, middle_after);
             let corner_before = Math.min(this.page-1, middle_before);
 
-            this.links_after  = corner_after+(middle_before-corner_before);
-            this.links_before = corner_before+(middle_after-corner_after);
+            this.links_after  = Math.min(corner_after, corner_after+(middle_before-corner_before));
+            this.links_before = Math.min(corner_before, corner_before+(middle_after-corner_after));
         }
     },
     mounted() {
