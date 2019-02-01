@@ -28,7 +28,7 @@
             </tbody>
         </table>
         <div>
-            <div class="pull-left showing">Showing 1 to 10 of 50 entries</div>
+            <div class="pull-left showing">Showing {{ (page-1)*perpage+1 }} to {{ (page-1)*perpage+records.length }}  of {{ count }} entries</div>
             <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" v-model="page" :pages="pages()" links="7"></paginator></div>
             <div class="pull-right perpage">Display
                 <select v-model="perpage" @change="retrieveData">
