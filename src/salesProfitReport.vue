@@ -14,9 +14,9 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th scope="col" class="sorting" @click="reorder('id')">#</th>
-                    <th scope="col" class="sorting" @click="reorder('name')">Name</th>
-                    <th scope="col" class="sorting" @click="reorder('phone')">Phone</th>
+                    <th scope="col" class="sorting" :class="orderClass('id')" @click="reorder('id')">#</th>
+                    <th scope="col" class="sorting" :class="orderClass('name')" @click="reorder('name')">Name</th>
+                    <th scope="col" class="sorting" :class="orderClass('phone')" @click="reorder('phone')">Phone</th>
                 </tr>
             </thead>
             <tbody>
@@ -117,6 +117,21 @@ export default {
                 this.order_by = by;
             }
             this.retrieveData();
+        },
+        orderClass(order){
+            /*
+             :class= attribute on Vue accepts an object like:
+             {
+               classname1: bool_apply_or_not,
+               classname2: bool_apply_or_not,
+               classname3: bool_apply_or_not
+             }
+             and it does not remove classes added by regular class= attribute
+            */
+            let css_classes = {};
+            css_classes['sorting_asc'] = (order == this.order_by);
+            css_classes['sorting_desc'] = (order+"_desc" == this.order_by);
+            return css_classes;
         }
     },
     watch: {
@@ -151,24 +166,25 @@ export default {
     .sales-profit-report .sorting {
         cursor: pointer;
     }
+
+    /* Sorting arrows */
+    .sales-profit-report .sorting:before,
     .sales-profit-report .sorting:after {
         right: 0.5em;
-        content: "\2193";
         float: right;
+        color: #cccccc;
     }
-    .sales-profit-report .sorting_asc:after {
-    }
-    .sales-profit-report .sorting_desc:after {
-        color: blue;
+    .sales-profit-report .sorting:after {
+        content: "\2193";
     }
     .sales-profit-report .sorting:before {
-        right: 0.5em;
         content: "\2191";
-        float: right;
     }
-    .sales-profit-report .sorting_asc:before {
-        color: blue;
-    }
+    .sales-profit-report .sorting_asc:after,
     .sales-profit-report .sorting_desc:before {
+        font-weight: bolder;
+        color: black;
     }
+
+
 </style>
