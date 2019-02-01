@@ -1,18 +1,18 @@
 <template>
     <ul class="paginator">
-        <li v-if="first" class="paginate-button first"><a @click.prevent="change(1)" href="#1">
+        <li v-if="first"  @click="change(1)" class="paginate-button first"><a @click.prevent="" href="#1">
                 <i class="fa fa-angle-double-left"></i>
             </a></li>
-        <li v-if="prev" class="paginate-button prev" ><a @click.prevent="change(page-1)" :href="'#'+(page-1)">
+        <li v-if="prev" @click="change(page-1)" class="paginate-button prev" ><a @click.prevent="" :href="'#'+(page-1)">
                 <i class="fa fa-angle-left"></i>
             </a></li>
-        <li class="paginate-button" v-for="button in linksBefore()" :key="button"> <a @click.prevent="change(button)" :href="'#'+button">{{ button }} </a></li>
+        <li class="paginate-button" v-for="button in linksBefore()" @click="change(button)" :key="button"> <a @click.prevent="" :href="'#'+button">{{ button }} </a></li>
         <li class="paginate-button current"><span class="paginator-current-page">{{ page }} </span></li>
-        <li class="paginate-button" v-for="button in linksAfter()" :key="button"> <a @click.prevent="change(button)" :href="'#'+button">{{ button }} </a></li>
-        <li v-if="next" class="paginate-button next" ><a @click.prevent="change(page*1+1)" :href="'#'+(page*1+1)">
+        <li class="paginate-button" v-for="button in linksAfter()" @click="change(button)" :key="button"> <a @click.prevent="" :href="'#'+button">{{ button }} </a></li>
+        <li v-if="next" @click="change(page*1+1)" class="paginate-button next" ><a @click.prevent="" :href="'#'+(page*1+1)">
                 <i class="fa fa-angle-right"></i>
             </a></li>
-        <li v-if="last" class="paginate-button last" ><a @click.prevent="change(pages)" :href="'#'+pages">
+        <li v-if="last" @click="change(pages)" class="paginate-button last" ><a @click.prevent="" :href="'#'+pages">
                 <i class="fa fa-angle-double-right"></i>
             </a></li>
     </ul>
