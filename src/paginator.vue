@@ -84,8 +84,16 @@ export default {
         }
     },
     mounted() {
-        this.page = this.value; // props are immutable, we need to use data
+        this.page = this.value;
     },
+    watch: {
+        value: function(new_val, old_val) {
+            this.page = new_val;
+            // props are not really immutable, it's just forbidden for us to mutate them.
+            // (It would break the data flow.  Communication UP should be achieved via events only)
+            // Parent component can mutate our props, though.
+        }
+    }
 }
 </script>
 <style>
