@@ -29,7 +29,7 @@
         </table>
         <div>
             <div class="pull-left showing">Showing 1 to 10 of 50 entries</div>
-            <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" :page="page" :pages="pages()" links="7"></paginator></div>
+            <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" v-model="page" :pages="pages()" links="7"></paginator></div>
             <div class="pull-right perpage">Display
                 <select v-model="perpage" @change="retrieveData">
                     <option value="10">10</option>
@@ -86,6 +86,9 @@ export default {
                     console.log(response);
                     top.lastResponse = response;
                     if(typeof response.data == 'string') {
+                        // I believe this explicit decoding is only needed because
+                        // current mock response do not have the correct mime type
+                        // header (json)
                         data = JSON.parse(response.data);
                     } else {
                         data = response.data;
@@ -115,8 +118,14 @@ export default {
             this.retrieveData();
         }
     },
-    mounted() {    // This function runs when the component is shown
-        console.log('MOUNTED');
+    watch: {
+        page: function(old, new_val) {
+            // console.log("this.page old value:", old);
+            // console.log("this.page new value:", new_val);
+            this.retrieveData();
+        }
+    },
+    mounted() {
         this.retrieveData();
     },
 }
