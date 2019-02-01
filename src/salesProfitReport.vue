@@ -29,7 +29,7 @@
         </table>
         <div>
             <div class="pull-left showing">Showing 1 to 10 of 50 entries</div>
-            <div class="pull-right paginator"><paginator :first="true" :last="true" :page="page" :pages="pages" links="7"></paginator></div>
+            <div class="pull-right paginator"><paginator :first="true" :last="true" :page="page" :pages="pages()" links="7"></paginator></div>
             <div class="pull-right perpage">Display
                 <select v-model="perpage">
                     <option value="10">10</option>
@@ -52,18 +52,11 @@ export default {
         return {
             records: [
             ],
-            order_by: '',
-            requested_page: 1,
-            requested_perpage: 10,
+            last_request: 1,
             page: 1,
-            pages: 1,
             perpage: 10,
-            search_string: '',
-            search_in_id: '',
-            search_in_name: '',
-            search_in_phone: '',
-            selected_ids: [],
-            all_selected: false,
+            order_by: '',
+            count: 0,
             errors: []
         }
     },
@@ -74,18 +67,21 @@ export default {
                 let self = this;  // we save a reference to this in self to use it inside the callback.
 
                 // here we call Axios.get() against the API endpoint that would give us the JSON list of records
-                let params = {
-                    page: self.requested_page,
-                    perpage: self.requested_perpage,
-                    search_string: self.search_string,
-                    search_in_id: self.search_in_id,
-                    search_in_name: self.search_in_name,
-                    search_in_phone: self.search_in_phone,
-                    selected_ids: self.selected_ids,
-                    all_selected: self.all_selected
+                self.last_request++;
+                let this_request = self.last_request;
+                let parameters = {
+                    page: self.page,
+                    perpage: self.perpage,
+                    sort: self.order_by,
                 }
-                axios.get(self.endpoint, params)
+                axios.get(self.endpoint, {params: parameters})
                 .then(function(response) {
+                    if(self.last_request != this_request) {
+                        // this request is not the last one
+                        // we made (maybe because of network issues)
+                        // Discard it.
+                        return;
+                    };
                     let data = {};
                     console.log(response);
                     top.lastResponse = response;
@@ -96,6 +92,7 @@ export default {
                     }
                     console.log(data);
                     self.records = data.records;
+                    self.count = data.count;
                 }).catch(function(error) {
                     self.errors = [error.message];
                 });
@@ -104,8 +101,18 @@ export default {
             }
             this.$forceUpdate();
         },
-        reorder() {
-
+        pages() {
+            return Math.ceil(this.count / this.perpage);
+        },
+        reorder(by) {
+            if(by == this.order_by) {
+                this.order_by = by+"_desc";
+            } else if(by+"_desc" == this.order_by) {
+                this.order_by = "";
+            } else {
+                this.order_by = by;
+            }
+            this.retrieveData();
         }
     },
     mounted() {    // This function runs when the component is shown

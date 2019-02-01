@@ -1,7 +1,7 @@
 {
     "page": 5,
-    "pages": 15,
     "perpage": 10,
+    "count": 505,
     "records": [
         {"id": 1, "name": "Sebastian", "phone": "15-6767-3010" },
         {"id": 2, "name": "Kalvin",    "phone": "555-12345" },
