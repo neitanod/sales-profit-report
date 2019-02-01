@@ -11,12 +11,12 @@
             </table>
         </div>
 
-        <table class="table">
+        <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th scope="col" @click="reorder('id')">#</th>
-                    <th scope="col" @click="reorder('name')">Name</th>
-                    <th scope="col" @click="reorder('phone')">Phone</th>
+                    <th scope="col" class="sorting" @click="reorder('id')">#</th>
+                    <th scope="col" class="sorting" @click="reorder('name')">Name</th>
+                    <th scope="col" class="sorting" @click="reorder('phone')">Phone</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,12 +133,41 @@ export default {
 </script>
 <style>
     .sales-profit-report {
+        font-family: Poppins;
+        font-weight: 300;
+        line-height: 1.5;
         margin: 5px;
+    }
+    .sales-profit-report .table {
+        font-size: 13px;
     }
     .sales-profit-report .showing,
     .sales-profit-report .paginator,
     .sales-profit-report .perpage {
         margin-left: 3px;
         margin-right: 3px;
+    }
+    .sales-profit-report .sorting {
+        cursor: pointer;
+    }
+    .sales-profit-report .sorting:after {
+        right: 0.5em;
+        content: "\2193";
+        float: right;
+    }
+    .sales-profit-report .sorting_asc:after {
+    }
+    .sales-profit-report .sorting_desc:after {
+        color: blue;
+    }
+    .sales-profit-report .sorting:before {
+        right: 0.5em;
+        content: "\2191";
+        float: right;
+    }
+    .sales-profit-report .sorting_asc:before {
+        color: blue;
+    }
+    .sales-profit-report .sorting_desc:before {
     }
 </style>
