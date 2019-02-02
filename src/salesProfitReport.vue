@@ -227,7 +227,6 @@ export default {
     .sales-profit-report .metrics-container {
         flex: 0 0 100%;
         max-width: 100%;
-        border: 1px solid red;
     }
 
     @media (min-width: 1200px) {
@@ -270,7 +269,6 @@ export default {
 
     /* Chart */
     .sales-profit-report .chart-container {
-        border: 1px solid red; /* temporarily to test width */
         background-color: grey;
         width: 100%;
         height: 500px;
