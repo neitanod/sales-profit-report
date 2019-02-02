@@ -224,7 +224,21 @@ export default {
     }
 
     /* Metrics */
+    .sales-profit-report .metrics-container {
+        flex: 0 0 100%;
+        max-width: 100%;
+        border: 1px solid red;
+    }
+
+    @media (min-width: 1200px) {
+        .sales-profit-report .metrics-container {
+            flex: 0 0 16.66667%;
+            max-width: 16.66667%;
+        }
+    }
+
     .sales-profit-report .metrics {
+        width: 100%;
         padding: 15px;
         float: left;
     }
@@ -254,26 +268,18 @@ export default {
         color:red;
     }
 
-    @media (min-width: 1200px) {
-        .sales-profit-report .metrics-container {
-            flex: 0 0 16.66667%;
-            max-width: 16.66667%;
-        }
-    }
-
     /* Chart */
-
     .sales-profit-report .chart-container {
         border: 1px solid red; /* temporarily to test width */
-        flex: 0 0 100%;
-        max-width: 100%;
-        float: left;
+        background-color: grey;
+        width: 100%;
+        height: 500px;
     }
 
     .sales-profit-report .chart-container {
-        width: 100%;
-        height: 500px;
-        background-color: grey;
+        float: left;
+        flex: 0 0 100%;
+        max-width: 100%;
     }
 
     @media (min-width: 1200px) {
