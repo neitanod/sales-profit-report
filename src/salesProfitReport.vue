@@ -11,6 +11,40 @@
             </table>
         </div>
 
+        <div class="metrics-container">
+            <ul class="metrics">
+                <li class="metric">
+                    <div class="metric-value en-money" v-html="metric('gross-sales')"></div>
+                    <div class="metric-label">gross sales in this period</div>
+                </li>
+                <li class="metric">
+                    <div class="metric-value en-money" v-html="metric('order-based-cogs')"></div>
+                    <div class="metric-label">order-based COGS</div>
+                </li>
+                <li class="metric">
+                    <div class="metric-value en-money" v-html="metric('product-based-cogs')"></div>
+                    <div class="metric-label">product-based COGS</div>
+                </li>
+                <li class="metric">
+                    <div class="metric-value en-money" v-html="metric('gross-profit')"></div>
+                    <div class="metric-label">gross profit period</div>
+                </li>
+                <li class="metric">
+                    <div class="metric-value" v-html="metric('orders')"></div>
+                    <div class="metric-label">orders placed</div>
+                </li>
+                <li class="metric">
+                    <div class="metric-value" v-html="metric('products')"></div>
+                    <div class="metric-label">units sold</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart">
+            </div>
+        </div>
+
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -31,7 +65,7 @@
             <div class="pull-left showing">Showing {{ (page-1)*perpage+1 }} to {{ (page-1)*perpage+records.length }}  of {{ count }} entries</div>
             <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" v-model="page" :pages="pages()" links="5"></paginator></div>
             <div class="pull-right perpage">Display
-                <select class="form-control" v-model="perpage" @change="retrieveData">
+                <select class="perpage-select" v-model="perpage" @change="retrieveData">
                     <option value="10">10</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
@@ -44,14 +78,22 @@
 var paginator = require('./paginator.vue').default;
 export default {
     components: { paginator: paginator },
-    props: {endpoint: {
-        type: String,
-        default: 'api/something'
-    }},
+    props: {
+        endpoint: {
+            type: String,
+            default: 'api/something'
+        },
+        metrics_endpoint: {
+            type: String,
+            default: 'api/metrics'
+        }
+    },
     data: function() {
         return {
             records: [
             ],
+            metrics: {
+            },
             last_request: 1,
             page: 1,
             perpage: 10,
@@ -69,37 +111,54 @@ export default {
                 // here we call Axios.get() against the API endpoint that would give us the JSON list of records
                 self.last_request++;
                 let this_request = self.last_request;
+
                 let parameters = {
                     page: self.page,
                     perpage: self.perpage,
                     sort: self.order_by,
-                }
+                };
+
                 // eslint-disable-next-line
                 axios.get(self.endpoint, {params: parameters})
-                .then(function(response) {
-                    if(self.last_request != this_request) {
-                        // this request is not the last one
-                        // we made (maybe because of network issues)
-                        // Discard it.
-                        return;
-                    }
-                    let data = {};
-                    console.log(response);
-                    top.lastResponse = response;
-                    if(typeof response.data == 'string') {
-                        // I believe this explicit decoding is only needed because
-                        // current mock response do not have the correct mime type
-                        // header (json)
-                        data = JSON.parse(response.data);
-                    } else {
-                        data = response.data;
-                    }
-                    console.log(data);
-                    self.records = data.records;
-                    self.count = data.count;
-                }).catch(function(error) {
-                    self.errors = [error.message];
-                });
+                    .then(function(response) {
+                        if(self.last_request != this_request) {
+                            // this request is not the last one
+                            // we made (maybe because of network issues)
+                            // Discard it.
+                            return;
+                        }
+                        let data = {};
+                        if(typeof response.data == 'string') {
+                            // I believe this explicit decoding is only needed because
+                            // current mock response do not have the correct mime type
+                            // header (json)
+                            data = JSON.parse(response.data);
+                        } else {
+                            data = response.data;
+                        }
+                        self.records = data.records;
+                        self.count = data.count;
+                    }).catch(function(error) {
+                        self.errors = [error.message];
+                    });
+
+                let metrics_parameters = {
+                };
+
+                axios.get(self.metrics_endpoint, {params: metrics_parameters})
+                    .then(function(response) {
+                        let data = {};
+                        console.log(response);
+                        if(typeof response.data == 'string') {
+                            data = JSON.parse(response.data);
+                        } else {
+                            data = response.data;
+                        }
+                        self.metrics = data.metrics;
+                    }).catch(function(error) {
+                        self.errors = [error.message];
+                    });
+
             } else {
                 this.errors = ['Axios library is not loaded.  Cannot retrieve data.'];
             }
@@ -133,6 +192,14 @@ export default {
             css_classes['sorting_asc'] = (order == this.order_by);
             css_classes['sorting_desc'] = (order+"_desc" == this.order_by);
             return css_classes;
+        },
+        metric(name){
+            // reads from this.metrics, but does not throw error if index does not exist
+            if(!(typeof this.metrics[name] == 'undefined')) {
+                return this.metrics[name];
+            } else {
+                return 0;
+            }
         }
     },
     watch: {
@@ -155,6 +222,68 @@ export default {
         line-height: 1.5;
         margin: 5px;
     }
+
+    /* Metrics */
+    .sales-profit-report .metrics {
+        padding: 15px;
+        float: left;
+    }
+
+    .sales-profit-report .metrics li {
+        display: block;
+        box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+        background-color: #ffffff;
+        padding: 15px;
+        color: #6f727d;
+    }
+
+    .sales-profit-report .metrics .metric-value {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .sales-profit-report .metrics .metric-label {
+        font-size: 13px;
+    }
+
+    .sales-profit-report .metrics .en-money::before {
+        content:"$";
+    }
+
+    .sales-profit-report .metrics .neg-money {
+        color:red;
+    }
+
+    @media (min-width: 1200px) {
+        .sales-profit-report .metrics-container {
+            flex: 0 0 16.66667%;
+            max-width: 16.66667%;
+        }
+    }
+
+    /* Chart */
+
+    .sales-profit-report .chart-container {
+        border: 1px solid red; /* temporarily to test width */
+        flex: 0 0 100%;
+        max-width: 100%;
+        float: left;
+    }
+
+    .sales-profit-report .chart-container {
+        width: 100%;
+        height: 500px;
+        background-color: grey;
+    }
+
+    @media (min-width: 1200px) {
+        .sales-profit-report .chart-container {
+            flex: 0 0 83.33333%;
+            max-width: 83.33333%;
+        }
+    }
+
+    /* Table */
     .sales-profit-report .table {
         font-size: 13px;
     }
@@ -166,6 +295,10 @@ export default {
     }
     .sales-profit-report .sorting {
         cursor: pointer;
+    }
+    .sales-profit-report .perpage-select {
+        background-color: #ffffff;
+        border-color: #dddddd;
     }
 
     /* Sorting arrows */

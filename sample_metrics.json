@@ -1,0 +1,10 @@
+{
+    "metrics": {
+        "gross-sales": 5003,
+        "gross-profit": 1001,
+        "order-based-cogs": 3203,
+        "product-based-cogs": 999,
+        "orders": 58,
+        "units": 153
+    }
+}
