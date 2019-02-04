@@ -3,8 +3,8 @@
         <div v-if="errors.length" class="alert alert-error">
             <div>Errors were found:</div>
             <table>
-                <tr>
-                    <td v-for="(error, i) in errors" v-bind:key="i">
+                <tr v-for="(error, i) in errors" v-bind:key="i">
+                    <td>
                         {{ error }}
                     </td>
                 </tr>
@@ -65,7 +65,7 @@
             <div class="pull-left showing">Showing {{ (page-1)*perpage+1 }} to {{ (page-1)*perpage+records.length }}  of {{ count }} entries</div>
             <div class="pull-right paginator"><paginator class="bottom" :first="true" :last="true" v-model="page" :pages="pages()" links="5"></paginator></div>
             <div class="pull-right perpage">Display
-                <select class="perpage-select" v-model="perpage" @change="retrieveData">
+                <select class="perpage-select" v-model="perpage" @change="retrieveTable">
                     <option value="10">10</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
@@ -104,6 +104,10 @@ export default {
     },
     methods: {
         retrieveData() {
+            this.retrieveTable();
+            this.retrieveMetrics();
+        },
+        retrieveTable() {
             if(typeof axios == 'function') {
                 // Axios is present and we can use it
                 let self = this;  // we save a reference to this in self to use it inside the callback.
@@ -139,12 +143,25 @@ export default {
                         self.records = data.records;
                         self.count = data.count;
                     }).catch(function(error) {
-                        self.errors = [error.message];
+                        self.addError("Table: "+error.message);
                     });
+
+            } else {
+                self.addError('Axios library is not loaded.  Cannot retrieve data.');
+            }
+            this.$forceUpdate();
+        },
+        retrieveMetrics() {
+            if(typeof axios == 'function') {
+                // Axios is present and we can use it
+                let self = this;  // we save a reference to this in self to use it inside the callback.
+
+                // here we call Axios.get() against the API endpoint that would give us the JSON list of records
 
                 let metrics_parameters = {
                 };
 
+                // eslint-disable-next-line
                 axios.get(self.metrics_endpoint, {params: metrics_parameters})
                     .then(function(response) {
                         let data = {};
@@ -156,11 +173,11 @@ export default {
                         }
                         self.metrics = data.metrics;
                     }).catch(function(error) {
-                        self.errors = [error.message];
+                        self.addError("Metrics: "+error.message);
                     });
 
             } else {
-                this.errors = ['Axios library is not loaded.  Cannot retrieve data.'];
+                self.addError('Axios library is not loaded.  Cannot retrieve data.');
             }
             this.$forceUpdate();
         },
@@ -175,7 +192,7 @@ export default {
             } else {
                 this.order_by = by;
             }
-            this.retrieveData();
+            this.retrieveTable();
         },
         orderClass(order){
             /*
@@ -200,13 +217,22 @@ export default {
             } else {
                 return 0;
             }
+        },
+        addError(errormsg, timeout){
+            let self = this;
+            if(timeout == undefined) {
+                timeout = 3000;
+            }
+            setTimeout(function(){ self.dismissErrors(); }, timeout);
+            this.errors.push(errormsg);
+        },
+        dismissErrors(){
+            this.errors.shift();
         }
     },
     watch: {
-        page: function(old, new_val) {
-            // console.log("this.page old value:", old);
-            // console.log("this.page new value:", new_val);
-            this.retrieveData();
+        page: function() {
+            this.retrieveTable();
         }
     },
     mounted() {
@@ -322,6 +348,12 @@ export default {
     .sales-profit-report .sorting_desc:before {
         font-weight: bolder;
         color: black;
+    }
+
+    /* Error message */
+    .alert.alert-error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
     }
 
 
